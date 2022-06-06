@@ -12,9 +12,4 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, x):
-        if torch.is_tensor(x):
-            try:
-                x = torch.tensor(x)
-            except Exception as e:
-                Exception(f"Unable to convert to tensor: {e}")
         return self.network(x)

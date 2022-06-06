@@ -5,6 +5,7 @@ import numpy as np
 import streamlit as st
 
 from model import NeuralNetwork
+from utils import create_linspace
 
 
 
@@ -38,7 +39,7 @@ def train():
 
     optimizer = torch.optim.LBFGS(N.parameters())
 
-    x = torch.Tensor(np.linspace(start_point, end_point, 100)[:, None])
+    x = torch.Tensor(create_linspace(internal))
 
     def closure():
 
@@ -52,7 +53,7 @@ def train():
         optimizer.step(closure)
 
 train()
-xx = np.linspace(start_point, end_point, 100)[:, None]
+xx = create_linspace(internal)
 
 with torch.no_grad():
     yy = Psi_t(torch.Tensor(xx)).numpy()
