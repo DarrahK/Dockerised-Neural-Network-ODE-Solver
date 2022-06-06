@@ -15,9 +15,9 @@ start_point = st.sidebar.number_input('Start point',)
 end_point = st.sidebar.number_input('End point', value=2.0)
 internal = (start_point, end_point)
 
-N = NeuralNetwork()
+model = NeuralNetwork()
 
-network_psi = lambda x: initial_value + x * N(x)
+network_psi = lambda x: initial_value + x * model(x)
 forcing_function = lambda x, Psi: torch.exp(-x / 5.0) * torch.cos(x) - Psi / 5.0
 actual_psi = lambda x: np.exp(-x / 5.0) * (np.sin(x) + initial_value)
 
@@ -35,7 +35,7 @@ def train():
 
         return  torch.mean( ( network_psi_x - forcing_function(x, outputs) )  ** 2)
 
-    optimizer = torch.optim.LBFGS(N.parameters())
+    optimizer = torch.optim.LBFGS(model.parameters())
 
     x = torch.Tensor(create_linspace(internal))
 
