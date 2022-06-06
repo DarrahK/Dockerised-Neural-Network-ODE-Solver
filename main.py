@@ -1,41 +1,39 @@
 import torch
 
-import matplotlib.pyplot as plt
+
 import numpy as np
 import streamlit as st
 
 from model import NeuralNetwork
-from utils import create_linspace
-
-
+from utils import create_linspace, create_fig
 
 # Steamlit
 st.title('Solving ODE with neural network')
 initial_value = st.sidebar.number_input('Initial value')
+
 start_point = st.sidebar.number_input('Start point',)
 end_point = st.sidebar.number_input('End point', value=2.0)
-
 internal = (start_point, end_point)
 
 N = NeuralNetwork()
 
-Psi_t = lambda x: initial_value + x * N(x)
+network_psi = lambda x: initial_value + x * N(x)
 forcing_function = lambda x, Psi: torch.exp(-x / 5.0) * torch.cos(x) - Psi / 5.0
-actual_Psi = lambda x: np.exp(-x / 5.0) * (np.sin(x) + initial_value)
+actual_psi = lambda x: np.exp(-x / 5.0) * (np.sin(x) + initial_value)
 
 def train():
 
     ## check if GPU is available and use it; otherwise use CPU
     torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    def loss(x):
+    def loss_function(x):
 
         x.requires_grad = True
-        outputs = Psi_t(x)
-        Psi_t_x = torch.autograd.grad(outputs, x, grad_outputs=torch.ones_like(outputs),
+        outputs = network_psi(x)
+        network_psi_x = torch.autograd.grad(outputs, x, grad_outputs=torch.ones_like(outputs),
                             create_graph=True)[0]
 
-        return  torch.mean( ( Psi_t_x - forcing_function(x, outputs) )  ** 2)
+        return  torch.mean( ( network_psi_x - forcing_function(x, outputs) )  ** 2)
 
     optimizer = torch.optim.LBFGS(N.parameters())
 
@@ -44,7 +42,7 @@ def train():
     def closure():
 
         optimizer.zero_grad()
-        l = loss(x)
+        l = loss_function(x)
         l.backward()
         
         return l
@@ -53,17 +51,12 @@ def train():
         optimizer.step(closure)
 
 train()
-xx = create_linspace(internal)
+internal_linspace = create_linspace(internal)
 
 with torch.no_grad():
-    yy = Psi_t(torch.Tensor(xx)).numpy()
-yt = actual_Psi(xx)
+    network_trajectory = network_psi(torch.Tensor(internal_linspace)).numpy()
+actual_trajectory = actual_psi(internal_linspace)
 
-fig, ax = plt.subplots(dpi=100)
-ax.plot(xx, yt, label='True')
-ax.plot(xx, yy, '--', label='Neural network approximation')
-ax.set_xlabel('$x$')
-ax.set_ylabel('$Psi(x)$')
-plt.legend(loc='best')
 
+fig = create_fig(internal_linspace, network_trajectory, actual_trajectory)
 st.pyplot(fig)
