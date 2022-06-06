@@ -13,7 +13,7 @@ initial_value = st.sidebar.number_input('Initial value')
 
 start_point = st.sidebar.number_input('Start point',)
 end_point = st.sidebar.number_input('End point', value=2.0)
-internal = (start_point, end_point)
+interval = (start_point, end_point)
 
 model = NeuralNetwork()
 
@@ -37,7 +37,7 @@ def train():
 
     optimizer = torch.optim.LBFGS(model.parameters())
 
-    x = torch.Tensor(create_linspace(internal))
+    x = torch.Tensor(create_linspace(interval))
 
     def closure():
 
@@ -51,12 +51,12 @@ def train():
         optimizer.step(closure)
 
 train()
-internal_linspace = create_linspace(internal)
+interval_linspace = create_linspace(interval)
 
 with torch.no_grad():
-    network_trajectory = network_psi(torch.Tensor(internal_linspace)).numpy()
-actual_trajectory = actual_psi(internal_linspace)
+    network_trajectory = network_psi(torch.Tensor(interval_linspace)).numpy()
+actual_trajectory = actual_psi(interval_linspace)
 
 
-fig = create_fig(internal_linspace, network_trajectory, actual_trajectory)
+fig = create_fig(interval_linspace, network_trajectory, actual_trajectory)
 st.pyplot(fig)
