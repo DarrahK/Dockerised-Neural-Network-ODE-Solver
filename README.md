@@ -19,3 +19,6 @@ docker compose up
 
 ### View
 Go to `http://localhost:8501/`
+
+# References:
+- https://www.analyticsvidhya.com/blog/2021/09/ordinary-differential-equations-made-easy-with-deep-learning/
