@@ -17,6 +17,7 @@ def train_model(model, interval, network_psi, forcing_function):
 
     optimizer = torch.optim.LBFGS(model.parameters())
 
+    # Creating training data
     x = torch.Tensor(create_linspace(interval))
 
     def closure():
@@ -27,5 +28,6 @@ def train_model(model, interval, network_psi, forcing_function):
         
         return l
 
+    # Training the model
     for _ in range(100):
         optimizer.step(closure)

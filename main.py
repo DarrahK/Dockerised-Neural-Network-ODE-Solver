@@ -10,6 +10,10 @@ from utils import create_linspace, create_fig
 
 # Steamlit
 st.title('Solving ODE with neural network')
+st.latex(r"""
+\frac{d}{dx} \Psi(x) + \frac{1}{5}\Psi(x) = e^{-\frac{x}{5}} \cos(x)
+""")
+
 initial_value = st.sidebar.number_input('Initial value')
 
 start_point = st.sidebar.number_input('Start point',)
