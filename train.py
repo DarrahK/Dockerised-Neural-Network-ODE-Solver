@@ -4,7 +4,7 @@ from utils import create_linspace
 ## check if GPU is available and use it; otherwise use CPU
 torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def train(model, interval, network_psi, forcing_function):
+def train_model(model, interval, network_psi, forcing_function):
 
     def loss_function(x):
 
