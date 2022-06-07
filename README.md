@@ -2,7 +2,7 @@
 
 
 ## Showcase
-
+![Alt Text](https://github.com/DarrahK/Dockerised-Neural-Network-ODE-Solver/blob/master/assets/example.gif)
 
 ## Usage
 ### Build
