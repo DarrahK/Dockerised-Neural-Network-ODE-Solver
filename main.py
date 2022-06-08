@@ -16,7 +16,7 @@ st.latex(r"""
 
 initial_value = st.sidebar.number_input('Initial value')
 
-start_point = st.sidebar.number_input('Start point',)
+start_point = 0.0
 end_point = st.sidebar.number_input('End point', value=2.0)
 interval = (start_point, end_point)
 
